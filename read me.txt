@@ -1,0 +1,34 @@
+Right click folder —- Open new terminal  —  write — python3 streamlit run web_app.py
+# 🎮 نظام محاكاة الأخلاقيات في الحرب الذكية | Ethical War AI Simulator
+
+## 📝 نظرة عامة (Overview)
+هذا المشروع هو تطبيق تفاعلي (Interactive Application) تم تطويره كجزء من بحث علمي حول **"الاستغلال البشري للذكاء الاصطناعي في الحروب وتحديد الأهداف: نظام محاكاة وخوارزمية للتقليل من تحكم الذكاء الاصطناعي"**.
+
+يهدف النظام إلى محاكاة قرارات الاستهداف العسكري في بيئات معقدة، وتقييم هذه القرارات بناءً على ثلاثة أبعاد رئيسية:
+1. **القانون الدولي الإنساني** (التمييز، التناسب، الاحتياط، الضرورة، الإنسانية).
+2. **الأخلاقيات** (المسؤولية البشرية، الشفافية، الكرامة، الاستقلالية).
+3. **الاعتبارات العسكرية** (القيمة الاستراتيجية، ضغط الوقت، الضرورة العملياتية).
+
+This project is an interactive simulation tool designed to evaluate military targeting decisions using AI within the framework of **Human-in-the-Loop (HITL)**. It measures the compliance of human decisions with International Humanitarian Law (IHL) and military ethics, preventing excessive machine autonomy.
+
+---
+
+## 📂 هيكلية المشروع (Project Structure)
+تم تصميم المشروع بنظام الوحدات (Modular Design) لسهولة التطوير والصيانة:
+```text
+ETHICAL_WAR_AI/
+│
+├── scenarios/            # مجلد يحتوي على بيانات وملفات السيناريوهات
+├── decision_maker.py     # المحرك البرمجي والخوارزمية التقييدية للقرارات
+├── interface.py          # واجهة المستخدم والتفاعل
+├── main.py               # نسخة نصية (CLI) لتشغيل النظام عبر سطر الأوامر
+├── web_app.py            # التطبيق الرئيسي لواجهة الويب (Streamlit)
+├── read me.txt           # تعليمات التشغيل السريعة
+└── README.md             # هذا الملف (شرح المشروع)
+
+
+git config --global user.name "fatemahmaher888-star"
+
+
+
+https://github.com/fatemahmaher888-star/Ethical-War-AI.git
