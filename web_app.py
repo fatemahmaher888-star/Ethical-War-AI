@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 import pandas as pd
 from datetime import datetime
+from restrictive_algorithm import apply_restrictive_constraints  # <-- التعديل الأول: استيراد الخوارزمية
 
 # إعدادات الصفحة
 st.set_page_config(
@@ -773,7 +774,6 @@ def get_final_judgment(overall_score, law_analysis, ethical_analysis, military_a
             "military": military_analysis["score"]
         }
     }
-    # استمرارية الكود من الجزء الأول...
 
 # الشريط الجانبي
 with st.sidebar:
@@ -956,18 +956,34 @@ with col2:
     
     # زر اتخاذ القرار
     if st.button("🚀 اتخذ القرار وتحليل النتائج", type="primary", use_container_width=True):
-        # إجراء التحليلات الثلاثة
+        # --- التعديل الثاني: تطبيق الخوارزمية التقييدية أولاً ---
+        restrictive_result = apply_restrictive_constraints(scenario["metrics"], selected_decision)
+        
+        # تحديد القرار النهائي بعد فرض القيود
+        if restrictive_result["restriction_applied"]:
+            st.warning(f"⚠️ **تم تطبيق قيد من الخوارزمية التقييدية:** {restrictive_result['reason']}")
+            # عرض القرار الأصلي والمعدل
+            original_title = DECISIONS[selected_decision-1]['title']
+            final_title = DECISIONS[restrictive_result["final_decision"]-1]['title']
+            st.info(f"القرار الأصلي: {original_title} ← القرار المعدل: {final_title}")
+            final_decision = restrictive_result["final_decision"]
+        else:
+            final_decision = selected_decision
+            st.success("✅ **لا توجد قيود مطبقة. القرار مطابق للشروط القانونية والأخلاقية.**")
+        
+        # إجراء التحليلات الثلاثة باستخدام القرار النهائي
         with st.spinner("🔍 جاري التحليل القانوني..."):
-            law_analysis = analyze_international_law(scenario, selected_decision)
+            law_analysis = analyze_international_law(scenario, final_decision)
         
         with st.spinner("⚖️ جاري التحليل الأخلاقي..."):
-            ethical_analysis = analyze_ethical_dimensions(scenario, selected_decision)
+            ethical_analysis = analyze_ethical_dimensions(scenario, final_decision)
         
         with st.spinner("🎯 جاري التحليل العسكري..."):
-            military_analysis = analyze_military_operational(scenario, selected_decision)
+            military_analysis = analyze_military_operational(scenario, final_decision)
+        # --- نهاية التعديل الثاني ---
         
         # حساب النتيجة الإجمالية
-        overall_score = calculate_overall_score(scenario, selected_decision, law_analysis, ethical_analysis, military_analysis)
+        overall_score = calculate_overall_score(scenario, final_decision, law_analysis, ethical_analysis, military_analysis)
         
         # الحصول على التقييم النهائي
         final_judgment = get_final_judgment(overall_score, law_analysis, ethical_analysis, military_analysis)
@@ -976,8 +992,8 @@ with col2:
         decision_record = {
             "scenario_id": scenario["id"],
             "scenario_title": scenario["title"],
-            "decision_id": selected_decision,
-            "decision_title": decision["title"],
+            "decision_id": final_decision,  # <-- التعديل الثالث: استخدام final_decision
+            "decision_title": DECISIONS[final_decision-1]["title"],  # <-- التعديل الثالث
             "overall_score": overall_score,
             "legal_score": law_analysis["overall_score"],
             "ethical_score": ethical_analysis["overall_score"],
